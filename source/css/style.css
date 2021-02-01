@@ -1,0 +1,77 @@
+body {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.game-area {
+  background-image: repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
+  background-size: 40px 40px;
+  position: relative;
+  border: 3px solid #ccc;
+  opacity: 0.5;
+  height: 360px;
+  width: 360px;
+}
+
+.game-area:focus {
+  outline: none;
+}
+
+.border {
+  /* background: #cbcdcd; */
+  height: 40px;
+  width: 40px;
+  top: 280px;
+  left: 0;
+  position: absolute;
+  background-color: #000000;
+  background-image: linear-gradient(315deg, #000000 0%, #7f8c8d 74%);
+}
+
+.box,
+.goal,
+.human {
+  /* background: #cbcdcd; */
+  height: 40px;
+  width: 40px;
+  top: 280px;
+  left: 80px;
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* border: 5px solid rgb(138, 101, 56); */
+}
+
+.box {
+  background-image: url(../images/box.png);
+  background-size: 40px 40px;
+}
+
+.box.active {
+  top: 280px;
+  left: 160px;
+  background-image: url(../images/box_active.png);
+}
+
+.goal {
+  top: 280px;
+  left: 240px;
+  background-image: url(../images/goal.png);
+  background-size: 20px 20px;
+  z-index: -1;
+}
+
+.human {
+  top: 280px;
+  left: 320px;
+  background-image: url(../images/human.png);
+  background-size: 35px 35px;
+}
