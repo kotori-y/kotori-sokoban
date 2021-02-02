@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 16:30:27
+ * @LastEditTime: 2021-02-02 16:59:13
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -178,14 +178,27 @@ class Sokoban {
         this.direction = -1;
         this.addNum = true;
         break;
+      case "KeyE":
+        this.direction = 0;
+        this.addNum = true;
+        break;
       default:
+        this.direction = -2
         this.addNum = false;
     }
   }
 
   #undo() {
-    this.moveNum--;
-    this.moveNum = this.moveNum >= 0 ? this.moveNum : 0;
+    if (this.direction === -1) {
+      this.moveNum--;
+      this.moveNum = this.moveNum >= 0 ? this.moveNum : 0;
+    } else {
+      var maxTrace = Object.keys(this.traceHistory).length - 1;
+      console.log(maxTrace);
+      this.moveNum++;
+      this.moveNum = this.moveNum <= maxTrace ? this.moveNum : maxTrace;
+    }
+
     var temp = this.traceHistory[this.moveNum];
 
     this.human.style.left = `${temp[0][0]}px`;
@@ -229,9 +242,13 @@ class Sokoban {
   #controller() {
     switch (this.direction) {
       case -1:
+      case 0:
         this.#undo();
         break;
-      default:
+      case 2:
+      case 8:
+      case 4:
+      case 6:
         var [hLeft, hTop] = this.#move(this.human);
 
         var aimBox = this.#isPushBox(hLeft, hTop, this.boxes);
@@ -256,6 +273,9 @@ class Sokoban {
             this.moveNum++;
           }
         }
+        break
+      default:
+        break
     }
     this.#updateNum();
     this.#recordTrace();
