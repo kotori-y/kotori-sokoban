@@ -16,9 +16,8 @@ body {
   background-size: 40px 40px;
   position: relative;
   border: 3px solid #ccc;
-  opacity: 0.5;
-  height: 360px;
-  width: 360px;
+  opacity: 0.8;
+  display: inline-block;
 }
 
 .game-area:focus {
@@ -76,6 +75,11 @@ body {
   background-size: 35px 35px;
 }
 
+.info-container {
+  left: 40px;
+  position: relative;
+}
+
 .copy-right {
   font-family: "Fira Code";
   margin: 100px 0;
@@ -101,7 +105,7 @@ body {
 }
 
 .level {
-  left: 400px;
+  /* left: 400px; */
   top: -35px;
   width: 153px;
   font-size: 35px;
@@ -109,14 +113,14 @@ body {
 }
 
 .move {
-  left: 400px;
+  /* left: 400px; */
   top: 40px;
   width: 153px;
   font-size: 20px;
 }
 
 .time {
-  left: 400px;
+  /* left: 400px; */
   top: 80px;
   width: 153px;
   font-size: 20px;
@@ -124,7 +128,7 @@ body {
 
 .operation {
   display: block;
-  left: 400px;
+  /* left: 400px; */
   top: 140px;
   width: 153px;
 }

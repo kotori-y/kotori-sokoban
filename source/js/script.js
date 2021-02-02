@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 17:01:50
+ * @LastEditTime: 2021-02-02 21:10:52
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -15,6 +15,7 @@ class Sokoban {
     boxArea,
     goalArea,
     humanArea,
+    infoElem,
     moveElem,
     timeElem
   ) {
@@ -23,6 +24,7 @@ class Sokoban {
     this.boxArea = boxArea;
     this.goalArea = goalArea;
     this.humanArea = humanArea;
+    this.infoElem = infoElem;
     this.moveElem = moveElem;
     this.timeElem = timeElem;
     this.moveNum = 0;
@@ -97,6 +99,7 @@ class Sokoban {
     this.goals = this.goalArea.children;
     this.#recordTrace();
 
+    this.infoElem.style.left = `${width + this.gridSize}px`;
     document.querySelector("#stageNum").innerHTML = stageNum;
   }
 
@@ -183,7 +186,7 @@ class Sokoban {
         this.addNum = true;
         break;
       default:
-        this.direction = -2
+        this.direction = -2;
         this.addNum = false;
     }
   }
@@ -273,16 +276,16 @@ class Sokoban {
             this.moveNum++;
           }
         }
-        break
+        break;
       default:
-        break
+        break;
     }
     this.#updateNum();
     this.#recordTrace();
   }
 
   async start() {
-    await this.#generateStage(1);
+    await this.#generateStage(2);
     this.#updateTime();
     document.addEventListener("keydown", (e) => {
       this.#keyEvent(e);
@@ -295,6 +298,7 @@ var borderArea = document.querySelector(".border-container");
 var boxArea = document.querySelector(".box-container");
 var goalArea = document.querySelector(".goal-container");
 var humanArea = document.querySelector(".human-container");
+var infoElem = document.querySelector(".info-container");
 var moveElem = document.querySelector("#moveNum");
 var timeElem = document.querySelector("#timeCost");
 var gameArea = document.querySelector(".game-area");
@@ -305,6 +309,7 @@ var app = new Sokoban(
   boxArea,
   goalArea,
   humanArea,
+  infoElem,
   moveElem,
   timeElem
 );
