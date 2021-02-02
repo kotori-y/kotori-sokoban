@@ -148,12 +148,12 @@ body {
 
 .operation-undoing {
   top: 63px;
-  left: 20px
+  left: 20px;
 }
 
 .operation-redoing {
   top: 45px;
-  left:100px;
+  left: 100px;
 }
 
 .key {
@@ -196,4 +196,15 @@ body {
 .redoing {
   top: 25px;
   left: 10px;
+}
+
+.game-clear {
+  position: absolute;
+  opacity: 0;
+  height: 360px;
+  width: 400px;
+  display: table;
+  z-index: 2;
+  transition: visibility 0s, opacity 0.5s linear;
+  visibility: hidden;
 }

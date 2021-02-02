@@ -3,10 +3,18 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 21:10:52
+ * @LastEditTime: 2021-02-02 22:46:02
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
+
+async function sleeper(delay) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, delay);
+  });
+}
 
 class Sokoban {
   constructor(
@@ -17,7 +25,9 @@ class Sokoban {
     humanArea,
     infoElem,
     moveElem,
-    timeElem
+    timeElem,
+    clearElem,
+    maxStageNum
   ) {
     this.gameArea = gameArea;
     this.borderArea = borderArea;
@@ -27,13 +37,18 @@ class Sokoban {
     this.infoElem = infoElem;
     this.moveElem = moveElem;
     this.timeElem = timeElem;
+    this.clearElem = clearElem;
     this.moveNum = 0;
     this.timer = null;
     this.timeCost = 0; // unit is second
     this.addNum = false;
+    this.allowedMove = true;
     this.traceHistory = {};
     this.undo = false;
+    this.stageNum = 1;
+    this.maxStageNum = maxStageNum;
 
+    document.addEventListener("keydown", (e) => this.#eventFunc(e), false);
     this.start();
   }
 
@@ -146,12 +161,55 @@ class Sokoban {
     return aimBox;
   }
 
-  #checkBox(aimBox) {
+  #isFinised() {
+    var num = document.querySelectorAll(".box.active").length;
+    return num === this.boxes.length;
+  }
+
+  #nextStage() {
+    this.stageNum++;
+    if (this.stageNum <= this.maxStageNum) {
+      this.traceHistory = {};
+      this.borderArea.innerHTML = "";
+      this.boxArea.innerHTML = "";
+      this.humanArea.innerHTML = "";
+      this.goalArea.innerHTML = "";
+
+      this.start();
+      this.moveNum = 0;
+      this.timeCost = 0;
+      this.#updateNum();
+
+      this.gameArea.style.opacity = 1;
+      this.clearElem.style.visibility = "hidden";
+      this.clearElem.style.opacity = 0;
+
+      this.allowedMove = true;
+    } else {
+      this.stageNum--
+    }
+  }
+
+  async #checkBox(aimBox) {
     aimBox.classList.remove("active");
     if (
       this.#isTouchObstacle(aimBox.offsetLeft, aimBox.offsetTop, this.goals)
     ) {
       aimBox.classList.add("active");
+      if (this.#isFinised()) {
+        clearInterval(this.timer);
+        this.allowedMove = false;
+
+        this.gameArea.style.opacity = 0.2;
+        this.clearElem.style.height = `${this.gameArea.clientHeight}px`;
+        this.clearElem.style.width = `${this.gameArea.clientWidth}px`;
+        this.clearElem.style.visibility = "visible";
+        this.clearElem.style.opacity = 1;
+
+        await sleeper(1500);
+
+        this.#nextStage();
+      }
     }
   }
 
@@ -284,16 +342,20 @@ class Sokoban {
     this.#recordTrace();
   }
 
-  async start() {
-    await this.#generateStage(2);
-    this.#updateTime();
-    document.addEventListener("keydown", (e) => {
+  #eventFunc(e) {
+    if (this.allowedMove) {
       this.#keyEvent(e);
       this.#controller();
-    });
+    }
+  }
+
+  async start() {
+    await this.#generateStage(this.stageNum);
+    this.#updateTime();
   }
 }
 
+const maxStageNum = 2
 var borderArea = document.querySelector(".border-container");
 var boxArea = document.querySelector(".box-container");
 var goalArea = document.querySelector(".goal-container");
@@ -301,6 +363,7 @@ var humanArea = document.querySelector(".human-container");
 var infoElem = document.querySelector(".info-container");
 var moveElem = document.querySelector("#moveNum");
 var timeElem = document.querySelector("#timeCost");
+var clearElem = document.querySelector(".game-clear");
 var gameArea = document.querySelector(".game-area");
 
 var app = new Sokoban(
@@ -311,5 +374,7 @@ var app = new Sokoban(
   humanArea,
   infoElem,
   moveElem,
-  timeElem
+  timeElem,
+  clearElem,
+  maxStageNum,
 );
