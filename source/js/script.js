@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 23:52:05
+ * @LastEditTime: 2021-02-02 23:56:31
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -176,11 +176,13 @@ class Sokoban {
       this.boxArea.innerHTML = "";
       this.humanArea.innerHTML = "";
       this.goalArea.innerHTML = "";
-
-      this.start();
       this.moveNum = 0;
       this.timeCost = 0;
       this.#updateNum();
+      this.timeElem.innerHTML = "00:00";
+
+      this.start();
+      
 
       this.gameArea.style.opacity = 1;
       this.clearElem.style.visibility = "hidden";
