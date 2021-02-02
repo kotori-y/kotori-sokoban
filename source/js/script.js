@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 16:59:13
+ * @LastEditTime: 2021-02-02 17:01:50
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -194,7 +194,7 @@ class Sokoban {
       this.moveNum = this.moveNum >= 0 ? this.moveNum : 0;
     } else {
       var maxTrace = Object.keys(this.traceHistory).length - 1;
-      console.log(maxTrace);
+      // console.log(maxTrace);
       this.moveNum++;
       this.moveNum = this.moveNum <= maxTrace ? this.moveNum : maxTrace;
     }
