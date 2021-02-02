@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 14:35:07
+ * @LastEditTime: 2021-02-02 16:30:27
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -29,8 +29,21 @@ class Sokoban {
     this.timer = null;
     this.timeCost = 0; // unit is second
     this.addNum = false;
+    this.traceHistory = {};
+    this.undo = false;
 
     this.start();
+  }
+
+  #recordTrace() {
+    this.human = this.humanArea.children[0];
+    this.boxes = this.boxArea.children;
+
+    var history = [[this.human.offsetLeft, this.human.offsetTop]];
+    for (let box of this.boxes) {
+      history.push([box.offsetLeft, box.offsetTop]);
+    }
+    this.traceHistory[this.moveNum] = history;
   }
 
   async #getStageData(stageNum) {
@@ -45,9 +58,9 @@ class Sokoban {
       var elem = document.createElement("div");
       elem.classList = elementType;
       var [x, y] = locates;
+
       elem.style.left = `${x * this.gridSize}px`;
       elem.style.top = `${height - (y + 1) * this.gridSize}px`;
-
       elems.push(elem);
     }
     return elems;
@@ -80,6 +93,10 @@ class Sokoban {
       this.humanArea.appendChild(element);
     });
 
+    this.borders = this.borderArea.children;
+    this.goals = this.goalArea.children;
+    this.#recordTrace();
+
     document.querySelector("#stageNum").innerHTML = stageNum;
   }
 
@@ -90,18 +107,16 @@ class Sokoban {
   }
 
   #updateTime() {
-    return new Promise((resolve) => {
-      this.timer = setInterval(() => {
-        this.timeCost++;
+    this.timer = setInterval(() => {
+      this.timeCost++;
 
-        var m = parseInt(this.timeCost / 60);
-        var s = this.timeCost % 60;
-        var m = m < 10 ? `0${m}` : `${m}`;
-        var s = s < 10 ? `0${s}` : `${s}`;
+      var m = parseInt(this.timeCost / 60);
+      var s = this.timeCost % 60;
+      var m = m < 10 ? `0${m}` : `${m}`;
+      var s = s < 10 ? `0${s}` : `${s}`;
 
-        this.timeElem.innerHTML = `${m}:${s}`;
-      }, 1000);
-    });
+      this.timeElem.innerHTML = `${m}:${s}`;
+    }, 1000);
   }
 
   #isColliding(left, top, obstacle) {
@@ -128,6 +143,15 @@ class Sokoban {
     return aimBox;
   }
 
+  #checkBox(aimBox) {
+    aimBox.classList.remove("active");
+    if (
+      this.#isTouchObstacle(aimBox.offsetLeft, aimBox.offsetTop, this.goals)
+    ) {
+      aimBox.classList.add("active");
+    }
+  }
+
   #keyEvent(e) {
     switch (e.code) {
       case "ArrowUp":
@@ -150,8 +174,32 @@ class Sokoban {
         this.direction = 6;
         this.addNum = true;
         break;
+      case "KeyQ":
+        this.direction = -1;
+        this.addNum = true;
+        break;
       default:
         this.addNum = false;
+    }
+  }
+
+  #undo() {
+    this.moveNum--;
+    this.moveNum = this.moveNum >= 0 ? this.moveNum : 0;
+    var temp = this.traceHistory[this.moveNum];
+
+    this.human.style.left = `${temp[0][0]}px`;
+    this.human.style.top = `${temp[0][1]}px`;
+
+    for (let idx = 1; idx < temp.length; idx++) {
+      var [left, top] = temp[idx];
+      var box = this.boxes[idx - 1];
+
+      if (box.offsetLeft !== left || box.offsetTop !== top) {
+        box.style.left = `${left}px`;
+        box.style.top = `${top}px`;
+        this.#checkBox(box);
+      }
     }
   }
 
@@ -179,40 +227,38 @@ class Sokoban {
   }
 
   #controller() {
-    var human = document.querySelector(".human");
-    var borders = this.borderArea.children;
-    var goals = this.goalArea.children;
-    var boxes = this.boxArea.children;
+    switch (this.direction) {
+      case -1:
+        this.#undo();
+        break;
+      default:
+        var [hLeft, hTop] = this.#move(this.human);
 
-    var [hLeft, hTop] = this.#move(human);
+        var aimBox = this.#isPushBox(hLeft, hTop, this.boxes);
 
-    var aimBox = this.#isPushBox(hLeft, hTop, boxes);
-
-    if (aimBox) {
-      var [bLeft, bTop] = this.#move(aimBox);
-      if (
-        !this.#isTouchObstacle(bLeft, bTop, borders) &&
-        !this.#isTouchObstacle(bLeft, bTop, boxes)
-      ) {
-        aimBox.style.left = `${bLeft}px`;
-        aimBox.style.top = `${bTop}px`;
-        aimBox.classList.remove("active");
-        if (this.#isTouchObstacle(bLeft, bTop, goals)) {
-          aimBox.classList.add("active");
+        if (aimBox) {
+          var [bLeft, bTop] = this.#move(aimBox);
+          if (
+            !this.#isTouchObstacle(bLeft, bTop, this.borders) &&
+            !this.#isTouchObstacle(bLeft, bTop, this.boxes)
+          ) {
+            aimBox.style.left = `${bLeft}px`;
+            aimBox.style.top = `${bTop}px`;
+            this.#checkBox(aimBox);
+            this.human.style.left = `${hLeft}px`;
+            this.human.style.top = `${hTop}px`;
+            this.moveNum++;
+          }
+        } else {
+          if (!this.#isTouchObstacle(hLeft, hTop, this.borders)) {
+            this.human.style.left = `${hLeft}px`;
+            this.human.style.top = `${hTop}px`;
+            this.moveNum++;
+          }
         }
-        human.style.left = `${hLeft}px`;
-        human.style.top = `${hTop}px`;
-        this.moveNum++;
-        this.#updateNum();
-      }
-    } else {
-      if (!this.#isTouchObstacle(hLeft, hTop, borders)) {
-        human.style.left = `${hLeft}px`;
-        human.style.top = `${hTop}px`;
-        this.moveNum++;
-        this.#updateNum();
-      }
     }
+    this.#updateNum();
+    this.#recordTrace();
   }
 
   async start() {
