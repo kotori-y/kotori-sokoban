@@ -81,10 +81,10 @@ body {
   margin: 100px 0;
 }
 
+.operation,
 .time,
 .move,
 .level {
-  display: flex;
   position: absolute;
   font-family: "Fira Code";
   user-select: none; /* supported by Chrome and Opera */
@@ -94,11 +94,18 @@ body {
   -ms-user-select: none;
 }
 
+.time,
+.move,
+.level {
+  display: flex;
+}
+
 .level {
   left: 400px;
   top: -35px;
   width: 153px;
   font-size: 35px;
+  font-weight: bolder;
 }
 
 .move {
@@ -113,4 +120,76 @@ body {
   top: 80px;
   width: 153px;
   font-size: 20px;
+}
+
+.operation {
+  display: block;
+  left: 400px;
+  top: 140px;
+  width: 153px;
+}
+
+.operation #operation {
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.operation-move,
+.operation-undoing,
+.operation-redoing {
+  position: relative;
+  display: flex;
+  height: 18px;
+}
+
+.operation-undoing {
+  top: 63px;
+  left: 20px
+}
+
+.operation-redoing {
+  top: 45px;
+  left:100px;
+}
+
+.key {
+  position: absolute;
+  font-size: 20px;
+  border: 1px solid;
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+}
+
+.arrowUp {
+  top: -13px;
+  left: 70px;
+}
+
+.arrowDown {
+  top: 30px;
+  left: 70px;
+}
+
+.arrowLeft {
+  top: 30px;
+  left: 27px;
+}
+
+.arrowRight {
+  top: 30px;
+  left: 113px;
+}
+
+.undoing {
+  top: 25px;
+  left: 8px;
+}
+
+.redoing {
+  top: 25px;
+  left: 10px;
 }
