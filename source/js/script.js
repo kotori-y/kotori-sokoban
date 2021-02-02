@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 22:46:02
+ * @LastEditTime: 2021-02-02 23:52:05
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -115,6 +115,8 @@ class Sokoban {
     this.#recordTrace();
 
     this.infoElem.style.left = `${width + this.gridSize}px`;
+    this.boxes = this.boxArea.children;
+    Array.from(this.boxes).forEach(box=>this.#checkBox(box))
     document.querySelector("#stageNum").innerHTML = stageNum;
   }
 
@@ -355,7 +357,7 @@ class Sokoban {
   }
 }
 
-const maxStageNum = 2
+const maxStageNum = 3
 var borderArea = document.querySelector(".border-container");
 var boxArea = document.querySelector(".box-container");
 var goalArea = document.querySelector(".goal-container");
