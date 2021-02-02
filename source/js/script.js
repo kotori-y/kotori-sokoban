@@ -3,18 +3,32 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-01 22:59:13
+ * @LastEditTime: 2021-02-02 14:35:07
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
 
 class Sokoban {
-  constructor(gameArea, borderArea, boxArea, goalArea, humanArea) {
+  constructor(
+    gameArea,
+    borderArea,
+    boxArea,
+    goalArea,
+    humanArea,
+    moveElem,
+    timeElem
+  ) {
     this.gameArea = gameArea;
     this.borderArea = borderArea;
     this.boxArea = boxArea;
     this.goalArea = goalArea;
     this.humanArea = humanArea;
+    this.moveElem = moveElem;
+    this.timeElem = timeElem;
+    this.moveNum = 0;
+    this.timer = null;
+    this.timeCost = 0; // unit is second
+    this.addNum = false;
 
     this.start();
   }
@@ -41,6 +55,7 @@ class Sokoban {
 
   async #generateStage(stageNum) {
     var stage = await this.#getStageData(stageNum);
+    this.moveNum = 0;
     this.gridSize = stage["gridSize"];
     var width = stage["width"] * this.gridSize;
     var height = stage["height"] * this.gridSize;
@@ -63,6 +78,29 @@ class Sokoban {
     });
     values[3].forEach((element) => {
       this.humanArea.appendChild(element);
+    });
+
+    document.querySelector("#stageNum").innerHTML = stageNum;
+  }
+
+  #updateNum() {
+    if (this.addNum) {
+      this.moveElem.innerHTML = this.moveNum;
+    }
+  }
+
+  #updateTime() {
+    return new Promise((resolve) => {
+      this.timer = setInterval(() => {
+        this.timeCost++;
+
+        var m = parseInt(this.timeCost / 60);
+        var s = this.timeCost % 60;
+        var m = m < 10 ? `0${m}` : `${m}`;
+        var s = s < 10 ? `0${s}` : `${s}`;
+
+        this.timeElem.innerHTML = `${m}:${s}`;
+      }, 1000);
     });
   }
 
@@ -95,21 +133,25 @@ class Sokoban {
       case "ArrowUp":
       case "KeyW":
         this.direction = 2;
+        this.addNum = true;
         break;
       case "ArrowDown":
       case "KeyS":
         this.direction = 8;
+        this.addNum = true;
         break;
       case "ArrowLeft":
       case "KeyA":
         this.direction = 4;
+        this.addNum = true;
         break;
       case "ArrowRight":
       case "KeyD":
         this.direction = 6;
+        this.addNum = true;
         break;
       default:
-        this.direction = this.direction;
+        this.addNum = false;
     }
   }
 
@@ -154,23 +196,28 @@ class Sokoban {
       ) {
         aimBox.style.left = `${bLeft}px`;
         aimBox.style.top = `${bTop}px`;
-        aimBox.classList.remove("active")
+        aimBox.classList.remove("active");
         if (this.#isTouchObstacle(bLeft, bTop, goals)) {
-          aimBox.classList.add("active")
+          aimBox.classList.add("active");
         }
         human.style.left = `${hLeft}px`;
         human.style.top = `${hTop}px`;
+        this.moveNum++;
+        this.#updateNum();
       }
     } else {
       if (!this.#isTouchObstacle(hLeft, hTop, borders)) {
         human.style.left = `${hLeft}px`;
         human.style.top = `${hTop}px`;
+        this.moveNum++;
+        this.#updateNum();
       }
     }
   }
 
   async start() {
     await this.#generateStage(1);
+    this.#updateTime();
     document.addEventListener("keydown", (e) => {
       this.#keyEvent(e);
       this.#controller();
@@ -182,6 +229,16 @@ var borderArea = document.querySelector(".border-container");
 var boxArea = document.querySelector(".box-container");
 var goalArea = document.querySelector(".goal-container");
 var humanArea = document.querySelector(".human-container");
+var moveElem = document.querySelector("#moveNum");
+var timeElem = document.querySelector("#timeCost");
 var gameArea = document.querySelector(".game-area");
 
-var app = new Sokoban(gameArea, borderArea, boxArea, goalArea, humanArea);
+var app = new Sokoban(
+  gameArea,
+  borderArea,
+  boxArea,
+  goalArea,
+  humanArea,
+  moveElem,
+  timeElem
+);

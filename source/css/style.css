@@ -80,3 +80,37 @@ body {
   font-family: "Fira Code";
   margin: 100px 0;
 }
+
+.time,
+.move,
+.level {
+  display: flex;
+  position: absolute;
+  font-family: "Fira Code";
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none;
+}
+
+.level {
+  left: 400px;
+  top: -35px;
+  width: 153px;
+  font-size: 35px;
+}
+
+.move {
+  left: 400px;
+  top: 40px;
+  width: 153px;
+  font-size: 20px;
+}
+
+.time {
+  left: 400px;
+  top: 80px;
+  width: 153px;
+  font-size: 20px;
+}
