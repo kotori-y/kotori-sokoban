@@ -1,0 +1,69 @@
+<!--
+ * @Description: gnerating stages
+ * @Author: Kotori Y
+ * @Date: 2021-02-03 11:20:52
+ * @LastEditors: Kotori Y
+ * @LastEditTime: 2021-02-03 21:43:25
+ * @FilePath: \kotori-sokoban\diy.html
+ * @AuthorMail: kotori@cbdd.me
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="source/css/style.css" />
+    <link rel="stylesheet" href="source/css/diy.css" />
+    <title>DIY</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="stuff-area">
+        <div class="stuff border" id="border"></div>
+        <div class="stuff box" id="box"></div>
+        <div class="stuff goal" id="goal"></div>
+        <div class="stuff human" id="human"></div>
+        <div class="stuff eraser" id="eraser">
+        </div>
+      </div>
+      <div class="game-area" tabindex="0">
+        <div class="border-container">
+          <!-- border here -->
+          <!-- <div class="border"></div> -->
+        </div>
+        <div class="box-container">
+          <!-- <div class="box"></div>
+          <div class="box active"></div> -->
+        </div>
+        <div class="goal-container">
+          <!-- <div class="goal"></div> -->
+        </div>
+        <div class="human-container">
+          <!-- <div class="human"></div> -->
+        </div>
+        <div class="temp-container">
+          <div class="temp border"></div>
+          <div class="temp box"></div>
+          <div class="temp goal" style="z-index: 0;"></div>
+          <div class="temp human"></div>
+          <div class="temp eraser"></div>
+        </div>
+      </div>
+      <div class="out-area">
+        <textarea id="stageJson" readonly="readonly">{"gridSize":40}</textarea>
+      </div>
+      <div class="size">
+        Width:
+        <input type="text" id="width" value="9" />
+        Height:
+        <input type="text" id="height" value="9" />
+        <button id="apply">Apply</button>
+      </div>
+    </div>
+    <script src="source/js/diy.js"></script>
+  </body>
+</html>

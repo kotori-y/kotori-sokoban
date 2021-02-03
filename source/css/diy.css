@@ -1,0 +1,81 @@
+.game-area,
+.out-area {
+  height: 360px;
+  width: 360px;
+  margin: 0 20px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+
+.out-area {
+  width: 200px;
+}
+
+#stageJson {
+  width: 100%;
+  height: 100%;
+  resize: none;
+}
+
+.stuff-area {
+  position: relative;
+  margin: 0 20px;
+}
+
+.stuff {
+  top: 20px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  left: -60px;
+}
+
+#box {
+  top: 100px;
+}
+
+#goal {
+  top: 180px;
+}
+
+#human {
+  top: 260px;
+}
+
+.eraser {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  top: 340px;
+  background-image: url(../images/eraser.svg);
+  background-size: 35px 35px;
+  background-repeat: no-repeat;
+}
+
+.size {
+  margin: 10px 20px;
+}
+
+.size input,
+.size button {
+  width: 20px;
+  margin: 0 30px;
+}
+
+.size button  {
+  width: 50px;
+  margin: 0 10px;
+  font-family: "Fira Code";
+  text-align: center;
+  align-items: center;
+}
+
+.temp-container .temp {
+  opacity: 0;
+  top: 0;
+  left: 0;
+}
+
+.temp-container .temp.check {
+  opacity: 0.5;
+}
