@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-02 23:56:31
+ * @LastEditTime: 2021-02-03 23:02:17
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -45,7 +45,7 @@ class Sokoban {
     this.allowedMove = true;
     this.traceHistory = {};
     this.undo = false;
-    this.stageNum = 1;
+    this.stageNum = 0;
     this.maxStageNum = maxStageNum;
 
     document.addEventListener("keydown", (e) => this.#eventFunc(e), false);
