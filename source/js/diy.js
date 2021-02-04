@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-03 15:33:14
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-03 23:34:14
+ * @LastEditTime: 2021-02-04 12:25:47
  * @FilePath: \kotori-sokoban\source\js\diy.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -49,8 +49,8 @@ class StageGnerator {
       });
     });
     this.tempElems.forEach((temp) =>
-      temp.addEventListener("click", (e) => {
-        this.placeStuff(temp, e);
+      temp.addEventListener("click", () => {
+        this.placeStuff(temp);
       })
     );
     document
@@ -58,11 +58,11 @@ class StageGnerator {
       .addEventListener("click", this.generateGrid, false);
 
     this.generateGrid();
-    this.data["border"] = []
-    this.data["box"] = []
-    this.data["human"] = []
-    this.data["goal"] = []
-    this.updateJson()
+    this.data["border"] = [];
+    this.data["box"] = [];
+    this.data["human"] = [];
+    this.data["goal"] = [];
+    this.updateJson();
   }
 
   #getRefer() {
@@ -82,8 +82,8 @@ class StageGnerator {
     this.gameElem.style.height = `${height}px`;
     this.out.style.height = `${height}px`;
     this.#getRefer();
-    this.data["width"] = this.w.value
-    this.data["height"] = this.h.value
+    this.data["width"] = this.w.value;
+    this.data["height"] = this.h.value;
     this.updateJson();
   };
 
@@ -118,7 +118,7 @@ class StageGnerator {
   };
 
   #isColliding(div1, divs) {
-    var colliding = Array.from(divs).some((div) => {
+    var colliding = Array.from(divs).find((div) => {
       return (
         parseInt(div1.style.left.replace("px", "")) === div.offsetLeft &&
         parseInt(div1.style.top.replace("px", "")) === div.offsetTop
@@ -155,19 +155,22 @@ class StageGnerator {
     }
   }
 
-  #removeStuff(e) {
-    //   var rect = e.getBoundingClientRect();
-    var x = e.clientX;
-    var y = e.clientY;
-    this.tempElems[this.tempElems.length - 1].style["z-index"] = -1;
-    var aim = document.elementFromPoint(x, y);
-    console.log(this.refer)
-    console.log([x,y])
-    aim.remove();
-    this.tempElems[this.tempElems.length - 1].style["z-index"] = 0;
+  #removeStuff() {
+    this.crash.remove();
+    let aim = this.crash.classList.value;
+    aim = aim.replace("active", "").trim()
+    let arr = this.data[aim];
+
+    for (var i = 0; i < arr.length; i++) {
+      if (JSON.stringify(arr[i]) === JSON.stringify(this.locate)) {
+        arr.splice(i, 1);
+      }
+    }
+
+    this.updateJson();
   }
 
-  placeStuff(temp, e) {
+  placeStuff(temp) {
     if (this.stuff2Show) {
       var elem = document.createElement("div");
       elem.classList = this.stuff2Show;
@@ -190,17 +193,16 @@ class StageGnerator {
           case "human":
             humanArea.innerHTML = "";
             this.humanArea.appendChild(elem);
-            this.data["human"] = []
+            this.data["human"] = [];
             break;
           default:
             break;
         }
-        this.data[this.stuff2Show].push(this.locate)
-        this.updateJson()
+        this.data[this.stuff2Show].push(this.locate);
+        this.updateJson();
       } else {
-        console.log(elem.getBoundingClientRect())
         if (this.crash && this.stuff2Show === "eraser") {
-          this.#removeStuff(e);
+          this.#removeStuff();
         }
       }
 
