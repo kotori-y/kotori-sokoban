@@ -3,7 +3,7 @@
  * @Author: Kotori Y
  * @Date: 2021-02-01 16:03:15
  * @LastEditors: Kotori Y
- * @LastEditTime: 2021-02-03 23:02:17
+ * @LastEditTime: 2021-05-29 10:24:21
  * @FilePath: \kotori-sokoban\source\js\script.js
  * @AuthorMail: kotori@cbdd.me
  */
@@ -359,7 +359,7 @@ class Sokoban {
   }
 }
 
-const maxStageNum = 3
+const maxStageNum = 8 
 var borderArea = document.querySelector(".border-container");
 var boxArea = document.querySelector(".box-container");
 var goalArea = document.querySelector(".goal-container");
